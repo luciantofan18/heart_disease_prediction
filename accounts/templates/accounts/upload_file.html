@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Fișiere pentru pacientul {{ pacient.nume }} {{ pacient.prenume }}</h2>
+
+    <hr>
+
+    <h4>Încarcă un fișier nou</h4>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Încarcă</button>
+    </form>
+
+    <hr>
+
+    <h4>Fișiere deja încărcate</h4>
+    {% if fisiere %}
+        <ul class="list-group">
+            {% for fisier in fisiere %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <a href="{{ fisier.uploaded_file.url }}" target="_blank">
+                        {{ fisier.uploaded_file.name|slice:"15:" }}
+                    </a><br>
+                    <small class="text-muted">Încărcat la: {{ fisier.uploaded_at }}</small>
+                </div>
+                <form method="post" action="{% url 'sterge_fisier' fisier.id %}" style="display:inline;" onsubmit="return confirm('Sigur vrei să ștergi acest fișier?');">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-danger">Șterge</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Nu există fișiere încărcate pentru acest pacient.</p>
+    {% endif %}
+
+    <a href="{% url 'vizualizeaza_pacienti' %}" class="btn btn-secondary mt-3">Înapoi la lista pacienților</a>
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Pagina{% endblock %}</title>
+</head>
+<body>
+
+    <!-- Navigație comună -->
+    <div>
+        <a href="{% url 'dashboard' %}">🏠 Dashboard</a>
+        <form method="post" action="{% url 'logout' %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit">Deconectare</button>
+        </form>
+    </div>
+
+    <hr>
+
+    <!-- Conținutul paginii -->
+    {% block content %}
+    {% endblock %}
+
+</body>
+</html>

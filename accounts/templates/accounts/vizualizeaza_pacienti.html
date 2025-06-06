@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista pacienților{% endblock %}
+
+{% block content %}
+  <h2>Lista pacienților</h2>
+
+  <div>
+    <a href="{% url 'adauga_pacient' %}">Adaugă pacient</a>
+  </div>
+    <form method="get" action="">
+    <input type="text" name="q" placeholder="Caută după nume sau prenume..." value="{{ query|default:'' }}">
+    <button type="submit">Caută</button>
+    </form>
+
+  {% if Pacients %}
+    <table border="1" cellpadding="5" cellspacing="0">
+      <thead>
+        <tr>
+          <th>Nume</th>
+          <th>Prenume</th>
+          <th>Vârstă</th>
+          <th>Email</th>
+          <th>Acțiuni</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for pacient in Pacients %}
+          <tr>
+            <td>{{ pacient.nume }}</td>
+            <td>{{ pacient.prenume }}</td>
+            <td>{{ pacient.age }}</td>
+            <td>{{ pacient.email }}</td>
+            <td>
+              <a href="{% url 'consultatii_pacient' pacient.id %}">Vezi consultațiile</a>
+              <a href="{% url 'adauga_parametri' pacient.id %}">Adaugă parametri</a>
+              <a href="{% url 'upload_file' pacient.id %}">Fișierele pacientului</a>
+
+              <form method="POST" action="{% url 'delete_patient' pacient.id %}" style="display:inline;" onsubmit="return confirm('Sigur vrei să ștergi acest pacient?');">
+                {% csrf_token %}
+                <button type="submit">Șterge</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>Nu ai niciun pacient înregistrat.</p>
+  {% endif %}
+{% endblock %}

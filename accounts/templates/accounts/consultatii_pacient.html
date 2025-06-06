@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h2>Consultațiile lui {{ pacient.nume }} {{ pacient.prenume }}</h2>
+
+  <!-- Lista consultațiilor -->
+  <ul>
+    {% for consult in consultatii %}
+      <li>
+        <strong>{{ consult.data }}</strong>:
+        Durere toracică: {{ consult.ChestPainType }} |
+        Tensiune arterială: {{ consult.RestingBP }} mmHg |
+        Colesterol: {{ consult.Cholesterol }} |
+        Glicemie: {{ consult.FastingBS }} |
+        ECG în repaus: {{ consult.RestingECG }} |
+        Puls maxim: {{ consult.MaxHR }} |
+        Angină la efort: {{ consult.ExerciseAngina }} |
+        Oldpeak: {{ consult.Oldpeak }} |
+        Panta ST: {{ consult.ST_slope }}
+      </li>
+    {% empty %}
+      <li>Nu există consultații pentru acest pacient.</li>
+    {% endfor %}
+  </ul>
+
+  <!-- Grafic consultații -->
+  <h3>Graficul evoluției parametrilor</h3>
+  <canvas id="paramChart" width="800" height="400"></canvas>
+
+  <!-- Include Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Script pentru afișarea graficului -->
+  <script>
+    const chartData = {{ chart_data|safe }};
+
+    const ctx = document.getElementById('paramChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: chartData.labels,
+        datasets: [
+          {
+            label: 'Tensiune arterială în repaus',
+            data: chartData.RestingBP,
+            borderColor: 'rgb(250,15,66)',
+            fill: false,
+            tension: 0.1
+          },
+          {
+            label: 'Colesterol',
+            data: chartData.Cholesterol,
+            borderColor: 'rgb(54, 162, 235)',
+            fill: false,
+            tension: 0.1
+          },
+          {
+            label: 'Puls maxim',
+            data: chartData.MaxHR,
+            borderColor: 'rgb(79,121,122)',
+            fill: false,
+            tension: 0.1
+          },
+          {
+            label: 'Glicemie a jeun',
+            data: chartData.FastingBS,
+            borderColor: 'rgb(255,215,0)',
+            fill: false,
+            tension: 0.1
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Evoluția parametrilor în timp'
+          }
+        },
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Data consultației'
+            }
+          },
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  </script>
+{% endblock %}

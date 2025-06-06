@@ -1,0 +1,35 @@
+<form method="post" enctype="multipart/form-data" style="max-width: 400px; margin: auto;">
+  {% csrf_token %}
+
+  <div style="margin-bottom: 15px;">
+    {{ form.username.label_tag }}<br>
+    {{ form.username }}
+  </div>
+
+  <div style="margin-bottom: 15px;">
+    {{ form.email.label_tag }}<br>
+    {{ form.email }}
+  </div>
+
+  <div style="margin-bottom: 15px;">
+    {{ form.password1.label_tag }}<br>
+    {{ form.password1 }}
+  </div>
+
+  <div style="margin-bottom: 15px;">
+    {{ form.password2.label_tag }}<br>
+    {{ form.password2 }}
+  </div>
+
+  <div style="margin-bottom: 20px;">
+    <label for="{{ form.upload_document.id_for_label }}">
+      Încarcă dovada că ești medic:
+    </label><br>
+    {{ form.upload_document }}
+    <small style="color: gray;">
+        <br>Ex: diplomă sau certificat profesional<br>
+      Documentul incarcat nu va fi salvat pe server.</small>
+  </div>
+
+  <button type="submit" style="padding: 8px 16px;">Înregistrează-te</button>
+</form>

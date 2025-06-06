@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Panou de control{% endblock %}
+
+{% block content %}
+  <h2>Panou de control</h2>
+
+  <div>
+      <a href="{% url 'adauga_pacient' %}">Adaugă pacient</a>
+      <a href="{% url 'vizualizeaza_pacienti' %}">Vezi pacienții tăi</a>
+
+  </div>
+
+  <p>Bun venit în panoul de control!</p>
+{% endblock %}

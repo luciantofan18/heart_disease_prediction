@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% if messages %}
+  <ul class="alert alert-danger">
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+  <div class="container mt-4">
+    <h2>Adaugă parametri consultație pentru {{ pacient.nume }} {{ pacient.prenume }}</h2>
+      <p>Daca doriti sa pastrati parametrii masurati anterior, puteti adauga doar consultatiile/analizele noi,insa la primul consult trebuie introduse toate camprile odata.</p>
+
+    <form method="POST">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-primary">Salvează</button> <br>
+    </form><br>
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label for="file">Încarcă fișa medicală (PDF):</label>
+    <input type="file" name="pdf_file" accept="application/pdf">
+    <button type="submit">Încarcă</button>
+</form>
+
+  </div>
+    {% if valori_detectate %}
+    <h4>Valori detectate automat:</h4>
+    <ul>
+    {% for cheie, valoare in valori_detectate.items %}
+        <li><strong>{{ cheie }}:</strong> {{ valoare }}</li>
+    {% endfor %}
+    </ul>
+{% endif %}
+{% endblock %}
