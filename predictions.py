@@ -20,9 +20,9 @@ for consultatie in Consultatii:
     data = pd.DataFrame([{
         'Age': consultatie.age,
         'Sex':  consultatie.sex,
-        'RestingBP':1 if (consultatie.RestingBP>120) else 0,
+        'RestingBP':consultatie.RestingBP,
         'Cholesterol': consultatie.Cholesterol,
-        'FastingBS': consultatie.FastingBS,
+        'FastingBS':1 if (consultatie.FastingBS>120) else 0,
         'MaxHR': consultatie.MaxHR,
         'ExerciseAngina': 1 if consultatie.ExerciseAngina == 'True' else 0,
         'Oldpeak': consultatie.Oldpeak,

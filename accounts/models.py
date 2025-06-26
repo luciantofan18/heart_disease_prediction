@@ -5,6 +5,8 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.serializers.json import DjangoJSONEncoder
 import json
 
+
+
 class Pacient(models.Model):
     SEX_CHOICES = [
         ('M', 'Masculin'),

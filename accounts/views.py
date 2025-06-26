@@ -180,7 +180,7 @@ def adauga_parametri(request, pacient_id):
                 param.sex = 1 if pacient.sex == 'M' else 0
 
                 try:
-                    ultimul = ParamConsult.objects.filter(pacient=pacient).latest('data')
+                    ultimul = ParamConsult.objects.filter(pacient=pacient).order_by('-id').first()
                 except ParamConsult.DoesNotExist:
                     ultimul = None
 

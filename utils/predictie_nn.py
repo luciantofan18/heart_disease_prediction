@@ -1,18 +1,28 @@
-import numpy as np
 import os
 import pickle
-from tensorflow.keras.models import load_model
 
-# Încarcă modelul Keras
-MODEL_PATH = os.path.join('prediction_models', 'model_complex_NN.keras')
-neural_net_model = load_model(MODEL_PATH)
+try:
+    import numpy as np
+    from tensorflow.keras.models import load_model
 
-# Încarcă scalerul
-SCALER_PATH = os.path.join('prediction_models', 'scaler1.pkl')
-with open(SCALER_PATH, 'rb') as f:
-    scaler = pickle.load(f)
+    MODEL_PATH = os.path.join('prediction_models', 'model_complex_NN.keras')
+    neural_net_model = load_model(MODEL_PATH)
+
+    SCALER_PATH = os.path.join('prediction_models', 'scaler1.pkl')
+    with open(SCALER_PATH, 'rb') as f:
+        scaler = pickle.load(f)
+
+    model_loaded = True
+except Exception as e:
+    print(f"[EROARE ÎNCĂRCARE MODEL NN] {e}")
+    model_loaded = False
+    neural_net_model = None
+    scaler = None
 
 def predict_with_neural_net(consult):
+    if not model_loaded:
+        raise RuntimeError("Modelul NN sau scalerul nu sunt încărcate corespunzător.")
+
     raw_input = np.array([[
         consult.age,
         consult.sex,
@@ -35,4 +45,3 @@ def predict_with_neural_net(consult):
     rezultat = neural_net_model.predict(scaled_input)
     scor = rezultat[0][0]
     return int(scor > 0.4), scor
-

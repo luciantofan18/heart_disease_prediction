@@ -110,5 +110,3 @@ Autor: Ionuț Lucian Tofan
 Coordonator: Conf. dr. ing. Radu Hobincu
 
 ---
-
-
