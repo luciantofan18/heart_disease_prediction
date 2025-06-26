@@ -4,8 +4,7 @@ Acest proiect reprezintă o aplicație web autonomă dezvoltată pentru detecți
 
 ## Scopul proiectului
 
-Proiectul urmărește crearea unui suport decizional inteligent pentru personalul medical, automatizând evaluarea riscurilor pe baza analizelor clinice. Prin utilizarea inteligenței artificiale, aplicația contribuie la o medicină preventivă, intervenții timpurii și o mai bună gestionare a pacienților.
-
+Acest proiect reprezintă o aplicație web autonomă destinată detecției timpurii a riscurilor cardiovasculare. Sistemul este conceput pentru a sprijini cadrele medicale prin analiză automată a datelor clinice și generarea de predicții bazate pe inteligență artificială. În cazurile în care este detectat un risc major, medicii sunt notificați automat prin email.
 ---
 
 ##  Tehnologii utilizate
@@ -65,12 +64,28 @@ Aplicația lansează la fiecare 2 minute un thread (`scheduler.py`) care:
 
 ---
 
-## Modele AI utilizate
+Aplicația integrează un pipeline AI complet:
 
-- **Random Forest** (principal): antrenat pe datasetul Heart Failure Prediction de pe Kaggle.
-- **Neural Network (MLP)**: rulat manual de medic pentru o verificare suplimentară.
+Random Forest
+Model principal, antrenat pe datasetul Heart Failure Prediction (Kaggle), oferă predicții automate la fiecare 2 minute pentru toți pacienții noi.
 
+SVM (Support Vector Machine)
+Model folosit pentru comparație în analiza offline, evaluat în faza de testare a performanței.
+
+Rețea neuronală (MLP)
+Model de tip Multi-Layer Perceptron, rulat manual pentru a oferi o a doua opinie AI în cadrul platformei.
 ---
+
+Pentru interpretarea automată a analizelor medicale încărcate în format PDF, aplicația folosește modelul Mistral (rulat local prin Ollama). Acesta:
+
+Primește textul extras din PDF prin PyMuPDF;
+
+Recunoaște valorile medicale relevante (colesterol, tensiune, glicemie etc.) folosind înțelegerea contextuală;
+
+Returnează un dicționar cu parametrii extrași, care sunt integrați automat în formularul pacientului;
+
+Permite completarea rapidă și fără erori umane a datelor clinice.
+
 
 ## Exemplu flux aplicație
 
@@ -82,6 +97,13 @@ Aplicația lansează la fiecare 2 minute un thread (`scheduler.py`) care:
 6. Istoricul este salvat în dashboard.
 
 ---
+## Mecanism de rulare automată
+Scriptul scheduler.py pornește un thread care la fiecare 2 minute:
+Găsește pacienții neverificați;
+Rulează predictions.py (model Random Forest);
+Salvează scorul și marcarea;
+Trimite email dacă scorul depășește pragul.
+
 
 ## Testare
 
@@ -102,10 +124,21 @@ Aplicația a fost testată cu:
 - Interfață minimalistă, adaptată uzului medical
 
 ---
+Limitări actuale
+PDF-uri foarte neclare sau scanate slab pot da erori la extragerea textului;
 
+Modelul LLM este generalist, nu specializat pe medicină (Mistral ≠ MedPaLM);
+
+Datele de antrenare sunt limitate la seturi publice, nu din spitale locale;
+
+Sistemul nu este certificat pentru uz clinic real – este un demo academic.
 ##
+## Considerații etice
+Proiectul nu înlocuiește diagnosticul medical. AI-ul este folosit strict ca asistent pentru triere și alertare rapidă. Toate deciziile finale trebuie luate de către personal calificat. Datele sensibile sunt procesate local, fără expunere online.
 
-Lucrare de licență – Universitatea Națională de Știință și Tehnologie POLITEHNICA București, 2025  
+
+## Lucrare de licență 
+Universitatea Națională de Știință și Tehnologie POLITEHNICA București, 2025  
 Autor: Ionuț Lucian Tofan  
 Coordonator: Conf. dr. ing. Radu Hobincu
 
