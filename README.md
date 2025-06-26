@@ -125,13 +125,10 @@ Aplicația a fost testată cu:
 
 ---
 Limitări actuale
-PDF-uri foarte neclare sau scanate slab pot da erori la extragerea textului;
-
-Modelul LLM este generalist, nu specializat pe medicină (Mistral ≠ MedPaLM);
-
-Datele de antrenare sunt limitate la seturi publice, nu din spitale locale;
-
-Sistemul nu este certificat pentru uz clinic real – este un demo academic.
+PDF-uri foarte neclare sau scanate slab pot da erori la extragerea textului
+Modelul LLM este generalist, nu specializat pe medicină
+Datele de antrenare sunt limitate la seturi publice, nu din spitale locale
+Sistemul nu este certificat pentru uz clinic real – este un demo academic
 ##
 ## Considerații etice
 Proiectul nu înlocuiește diagnosticul medical. AI-ul este folosit strict ca asistent pentru triere și alertare rapidă. Toate deciziile finale trebuie luate de către personal calificat. Datele sensibile sunt procesate local, fără expunere online.
