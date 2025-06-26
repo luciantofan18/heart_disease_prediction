@@ -64,6 +64,7 @@ Aplicația lansează la fiecare 2 minute un thread (`scheduler.py`) care:
 
 ---
 
+## Modele
 Aplicația integrează un pipeline AI complet:
 
 Random Forest
@@ -76,7 +77,7 @@ Rețea neuronală (MLP)
 Model de tip Multi-Layer Perceptron, rulat manual pentru a oferi o a doua opinie AI în cadrul platformei.
 
 ---
-
+## Procesare PDF
 Pentru interpretarea automată a analizelor medicale încărcate în format PDF, aplicația folosește modelul Mistral (rulat local prin Ollama). Acesta:
 
 Primește textul extras din PDF prin PyMuPDF;
