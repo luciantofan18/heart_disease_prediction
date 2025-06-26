@@ -7,7 +7,7 @@ def send_alert_email(to_emails, subject, message):
     send_mail(
         subject,
         message,
-        None,  # Folosește DEFAULT_FROM_EMAIL
+        None,  # DEFAULT_FROM_EMAIL
         to_emails,
         fail_silently=False
     )

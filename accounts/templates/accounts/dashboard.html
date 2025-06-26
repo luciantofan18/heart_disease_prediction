@@ -3,13 +3,48 @@
 {% block title %}Panou de control{% endblock %}
 
 {% block content %}
-  <h2>Panou de control</h2>
+<h2 style="font-size: 28px;">Panou de control</h2>
 
-  <div>
-      <a href="{% url 'adauga_pacient' %}">Adaugă pacient</a>
-      <a href="{% url 'vizualizeaza_pacienti' %}">Vezi pacienții tăi</a>
+<div style="font-size: 22px;">
+    <a href="{% url 'adauga_pacient' %}">Adaugă pacient</a>
+    <a href="{% url 'vizualizeaza_pacienti' %}">Vezi pacienții tăi</a>
+</div>
 
-  </div>
+<p style="font-size: 20px;">Bun venit în panoul de control!</p>
 
-  <p>Bun venit în panoul de control!</p>
+<div style="max-width: 280px; margin: 30px auto; padding: 16px; border: 1px solid #a00000; border-radius: 14px; background-color: white; box-shadow: 0 2px 6px rgba(0,0,0,0.08); text-align: center;">
+    <h3 style="color: #a00000; font-size: 18px; margin-bottom: 12px;">Statistici pacienți</h3>
+    <canvas id="riscChart" width="200" height="200" style="width: 100%; height: auto;"></canvas>
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('riscChart').getContext('2d');
+    const riscChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Cu risc', 'Fără risc', 'Neverificați'],
+            datasets: [{
+                data: [{{ cu_risc }}, {{ fara_risc }}, {{ neverificate }}],
+                backgroundColor: ['#bd2020', '#21ac21', '#cccccc'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        font: { size:14 }
+                    }
+                }
+            },
+            cutout: '0%',
+        }
+    });
+</script>
+
+
 {% endblock %}

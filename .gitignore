@@ -6,3 +6,7 @@ media/
 *.pyc
 *.log
 .DS_Store
+*.db
+.env
+.env.*
+Thumbs.db

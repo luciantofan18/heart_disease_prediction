@@ -19,6 +19,7 @@ def main():
 
 
 if __name__ == '__main__':
-    from scheduler import start_scheduler
-    start_scheduler()
+    if os.environ.get('RUN_MAIN') == 'true':
+        from scheduler import start_scheduler
+        start_scheduler()
     main()

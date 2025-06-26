@@ -1,25 +1,82 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="ro">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Pagina{% endblock %}</title>
+    <title>{% block title %}Sistem autonom de detecție a bolilor cardiovasculare{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
 
-    <!-- Navigație comună -->
-    <div>
-        <a href="{% url 'dashboard' %}">🏠 Dashboard</a>
-        <form method="post" action="{% url 'logout' %}" style="display:inline;">
-            {% csrf_token %}
-            <button type="submit">Deconectare</button>
-        </form>
-    </div>
 
-    <hr>
+    <header class="navbar">
 
-    <!-- Conținutul paginii -->
-    {% block content %}
-    {% endblock %}
+        <div class="navbar-left">
+            <img src="{% static 'images/logo.png' %}" alt="Logo" class="logo">
+            <span class="title">Sistem autonom de detecție a bolilor cardiovasculare</span>
+        </div>
+        <div class="navbar-right">
+    Următoarea rulare automată: <span id="countdown">--:--</span>
+        </div>
+
+        <div class="dropdown">
+            <button class="dropbtn">Navigație ▾</button>
+            <div class="dropdown-content">
+                <a href="{% url 'adauga_pacient' %}"> Adaugă pacient</a>
+                <a href="{% url 'dashboard' %}"> Dashboard</a>
+                <a href="{% url 'vizualizeaza_pacienti' %}"> Vizualizează pacienți</a>
+                <a href="{% url 'model_history' %}"> Istoric model AI</a>
+
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-btn"> Logout</button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+
+    <main class="content">
+ <script>
+    async function startSyncedCountdown() {
+        const countdownElement = document.getElementById("countdown");
+
+        try {
+            const response = await fetch("/accounts/countdown/");
+            const data = await response.json();
+            const lastRunTime = new Date(data.last_run);
+            const intervalSeconds = 122;
+
+            function updateCountdown() {
+                const now = new Date();
+                const secondsSinceLastRun = Math.floor((now - lastRunTime) / 1000);
+                const secondsToNext = intervalSeconds - (secondsSinceLastRun % intervalSeconds);
+
+                if (secondsToNext <= 1) {
+                    countdownElement.innerText = "în curs...";
+                } else {
+                    const minutes = Math.floor(secondsToNext / 60);
+                    const seconds = secondsToNext % 60;
+                    countdownElement.innerText = `${minutes}m ${seconds.toString().padStart(2, '0')}s`;
+                }
+            }
+
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        } catch (error) {
+            countdownElement.innerText = "Eroare sync";
+            console.error("Eroare la fetch countdown:", error);
+        }
+    }
+
+    startSyncedCountdown();
+</script>
+
+
+
+        {% block content %}
+        {% endblock %}
+    </main>
 
 </body>
 </html>

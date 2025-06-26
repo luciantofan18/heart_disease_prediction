@@ -5,8 +5,6 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.serializers.json import DjangoJSONEncoder
 import json
 
-
-
 class Pacient(models.Model):
     SEX_CHOICES = [
         ('M', 'Masculin'),
@@ -19,6 +17,7 @@ class Pacient(models.Model):
     sex = models.CharField(max_length=1, choices=SEX_CHOICES)
     email = models.EmailField()
     doctor = models.ForeignKey(User, on_delete=models.CASCADE)
+    stare = models.IntegerField( default=0)
     @property
     def age(self):
         today = date.today()
@@ -44,10 +43,10 @@ class ParamConsult(models.Model):
     ]
 
     ChestPainType_choices = [
-        ('ATA', 'Typical Angina'),
+        ('TA', 'Typical Angina'),
         ('NAP', 'Non-Anginal Pain'),
         ('ASY', 'Asymptomatic'),
-        ('TA', 'Atypical Angina')
+        ('ATA', 'Atypical Angina')
     ]
 
     RestingECG_choices = [
@@ -93,3 +92,15 @@ class PacientFile(models.Model):
 
     def __str__(self):
         return f"Fișier pentru {self.pacient.nume} - {self.uploaded_file.name}"
+
+
+class PredictieFinala(models.Model):
+    pacient = models.OneToOneField(Pacient, on_delete=models.CASCADE)
+    rezultat = models.CharField(max_length=10)  # 'risc' / 'fara risc'
+    probabilitate_risc = models.FloatField()
+    probabilitate_nu_risc = models.FloatField()
+    procent_voturi = models.FloatField()
+    data = models.DateTimeField(auto_now=True)
+
+    caracteristici_folosite = models.JSONField()
+    importanta_caracteristici = models.JSONField()

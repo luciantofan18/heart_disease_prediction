@@ -2,12 +2,16 @@ import threading
 import time
 import os
 from datetime import datetime
+
 def run_predictions_periodically():
     while True:
-        print(datetime.now().strftime("%H:%M:%S"))
+        now = datetime.now()
+        with open("last_run.txt", "w") as f:
+            f.write(now.isoformat())
+
         print("[Scheduler] Rulăm predicțiile...")
         os.system("python predictions.py")
-        time.sleep(300)  # in secunde
+        time.sleep(120)
 
 # Rulează într-un thread separat
 def start_scheduler():

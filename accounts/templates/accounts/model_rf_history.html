@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block title %}Evoluția modelului AI{% endblock %}
+
+{% block content %}
+<h2 class="section-title">Evoluția modelului AI</h2>
+
+<section class="model-section">
+    <h3>Versiunea inițială</h3>
+    <p>
+        Modelul Random Forest a fost ales ca punct de plecare pentru clasificarea riscului cardiovascular.
+        În varianta inițială, a fost utilizată o instanță de <code>RandomForestClassifier</code> fără optimizări majore.
+    </p>
+</section>
+
+<section class="model-section">
+    <h3>Îmbunătățiri și Optimizare</h3>
+    <p>
+        Optimizarea a fost realizată cu ajutorul <strong>GridSearchCV</strong> (2880 combinații testate, 5-fold cross-validation), pe baza scorului F1. Astfel, s-a obținut configurația optimă:
+    </p>
+    <ul>
+        <li><code>criterion = 'entropy'</code> |  Măsoară cât de bine un split separă clasele, folosind entropia</li>
+        <li><code>n_estimators = 100</code>  | Numărul de arbori în pădure.</li>
+        <li><code>max_depth = 15</code>  | Adâncimea maximă a arborilor.</li>
+        <li><code>min_samples_split = 10</code>  | Nodurile cu mai puțin de 10 rânduri (rând = un exemplu / un pacient) nu se mai divid</li>
+        <li><code>min_samples_leaf = 3</code>  | Sunt  minimum 3 exemple într-o frunză - evitarea luării deciziei pe un număr foarte mic de exemple</li>
+        <li><code>max_features = 'sqrt'</code>  | Câte variabile (sqrt(features), in cazul nostru=4) sunt luate în calcul atunci când un arbore decide cum să împartă datele într-un nod.</li>
+    </ul>
+    <p>
+        După optimizare, scorurile s-au îmbunătățit semnificativ:
+    </p>
+    <ul>
+        <li><strong>F1-score:</strong> de la aprox. 0.88 → <strong>0.9171</strong></li>
+        <li><strong>Recall:</strong> 0.9691 (doar 3 cazuri pozitive ratate)</li>
+        <li><strong>AUC-ROC:</strong> 0.8859</li>
+    </ul>
+</section>
+
+<section class="model-section">
+    <h3>Testări și Validări</h3>
+    <p>
+        Modelul a fost testat pe un set de test separat, utilizând 5-fold cross-validation. Nu s-au observat semne de overfitting. S-a folosit o funcție personalizată de evaluare precum:
+    </p>
+    <ul>
+        <li>Acuratețe, Precizie, Recall, F1-score, AUC-ROC</li>
+        <li>Confusion Matrix (TP/FP/FN/TN)</li>
+    </ul>
+</section>
+
+<section class="model-section">
+    <h3>Comparații cu alte modele</h3>
+    <table class="comparison-table">
+        <thead>
+            <tr>
+                <th>Model</th><th>Acuratețe</th><th>Precizie</th><th>Recall</th><th>F1-score</th><th>AUC-ROC</th><th>FN</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Random Forest</strong></td><td><strong>0.8988</strong></td><td>0.8704</td><td><strong>0.9691</strong></td><td><strong>0.9171</strong></td><td><strong>0.8859</strong></td><td><strong>3</strong></td></tr>
+            <tr><td>SVC Optimized</td><td>0.8690</td><td>0.8866</td><td>0.8866</td><td>0.8866</td><td>0.8658</td><td>11</td></tr>
+            <tr><td>Neural Network</td><td>0.8810</td><td><strong>0.8889</strong></td><td>0.9072</td><td>0.8980</td><td>0.8761</td><td>9</td></tr>
+            <tr><td>Complex Neural Net</td><td>0.8929</td><td>0.8762</td><td>0.9485</td><td>0.9109</td><td>0.8827</td><td>5</td></tr>
+        </tbody>
+    </table>
+    <p>
+        Modelul Random Forest a obținut cele mai bune scoruri generale, fiind cel mai echilibrat în detecția pacienților cu risc real.
+    </p>
+</section>
+
+<section class="model-section">
+    <h3>Concluzie</h3>
+    <p>
+        Datorită performanțelor ridicate și a stabilității în utilizare practică, modelul Random Forest a fost ales pentru implementarea finală în sistemul de detecție a riscului cardiovascular.
+    </p>
+</section>
+
+{% endblock %}

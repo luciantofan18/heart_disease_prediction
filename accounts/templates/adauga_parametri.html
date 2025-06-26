@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
-    {% if messages %}
+
+{% if messages %}
   <ul class="alert alert-danger">
     {% for message in messages %}
       <li>{{ message }}</li>
@@ -8,29 +9,94 @@
   </ul>
 {% endif %}
 
-  <div class="container mt-4">
-    <h2>Adaugă parametri consultație pentru {{ pacient.nume }} {{ pacient.prenume }}</h2>
-      <p>Daca doriti sa pastrati parametrii masurati anterior, puteti adauga doar consultatiile/analizele noi,insa la primul consult trebuie introduse toate camprile odata.</p>
+<div class="container mt-4">
+  <h2>Adaugă parametri consultației pentru {{ pacient.nume }} {{ pacient.prenume }}</h2>
+  <p>
+    Dacă doriți să păstrați parametrii măsurați anterior, puteți adăuga doar consultațiile/analizele noi.
+    Însă la primul consult trebuie introduse toate câmpurile o dată.
+  </p>
 
-    <form method="POST">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit" class="btn btn-primary">Salvează</button> <br>
-    </form><br>
+  <!-- Formular parametri -->
+  <form method="POST">
+    {% csrf_token %}
+
+    <div class="form-group">
+      <label for="{{ form.ChestPainType.id_for_label }}">Tip durere toracică</label>
+      {{ form.ChestPainType }}
+      <span class="tooltip-icon" title="ATA = Angină tipică, NAP = Durere Non-anginoasă (Durere in piept , dar nu cauzată de probleme la inimă), ASY = Asimptomatic, TA = Angină atipică.">?</span>
+    </div>
+<div style="height: 10px;"></div>
+    <div class="form-group">
+      <label for="{{ form.RestingBP.id_for_label }}">Tensiune arterială în repaus</label>
+      {{ form.RestingBP }}
+      <span class="tooltip-icon" title="Tensiunea sistolică măsurată în repaus, în mmHg.">?</span>
+    </div>
+<div style="height: 10px;"></div>
+    <div class="form-group">
+      <label for="{{ form.Cholesterol.id_for_label }}">Colesterol</label>
+      {{ form.Cholesterol }}
+      <span class="tooltip-icon" title="Nivelul colesterolului total(seric), în mg/dL.">?</span>
+    </div>
+<div style="height: 10px;"></div>
+    <div class="form-group">
+      <label for="{{ form.FastingBS.id_for_label }}">Glicemie </label>
+      {{ form.FastingBS }}
+      <span class="tooltip-icon" title="Valoarea glicemiei pe nemâncate.Valori peste 120 mg/dL sunt considerate ridicate.">?</span>
+    </div>
+<div style="height: 10px;"></div>
+    <div class="form-group">
+      <label for="{{ form.RestingECG.id_for_label }}">Rezultat ECG în repaus</label>
+      {{ form.RestingECG }}
+      <span class="tooltip-icon" title="Normal, ST-T anormal, Hipertrofie ventriculară stângă(Hipertrofia ventriculară stângă este creșterea și îngroșarea pereților ventriculului stâng – principala cameră pentru pomparea inimii.)">?</span>
+    </div>
+<div style="height: 10px;"></div>
+    <div class="form-group">
+      <label for="{{ form.MaxHR.id_for_label }}">Puls maxim</label>
+      {{ form.MaxHR }}
+      <span class="tooltip-icon" title="Puls maxim în timpul efortului (bătăi/min).">?</span>
+    </div>
+<div style="height: 10px;"></div>
+    <div class="form-group">
+      <label for="{{ form.ExerciseAngina.id_for_label }}">Angină la efort</label>
+      {{ form.ExerciseAngina }}
+      <span class="tooltip-icon" title="Durere în piept apărută în timpul efortului.">?</span>
+    </div>
+<div style="height: 10px;"></div>
+
+    <div class="form-group">
+      <label for="{{ form.Oldpeak.id_for_label }}">Oldpeak</label>
+      {{ form.Oldpeak }}
+      <span class="tooltip-icon" title="Depresie ST cauzată de activitate, în comparație cu repausul.">?</span>
+    </div>
+<div style="height: 10px;"></div>
+
+    <div class="form-group">
+      <label for="{{ form.ST_slope.id_for_label }}">Pantă ST</label>
+      {{ form.ST_slope }}
+      <span class="tooltip-icon" title="Panta segmentului ST în efort- Up=În sus, Flat=Dreaptă, sau Down=Îin jos –">?</span>
+    </div>
+<div style="height: 10px;"></div>
+    <button type="submit" class="btn btn-primary">Salvează</button>
+  </form>
+
+  <br>
+
+  <!-- Formular PDF -->
   <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    <label for="file">Încarcă fișa medicală (PDF):</label>
+    <label for="file">Încarcă fișa medicală (PDF only):</label>
     <input type="file" name="pdf_file" accept="application/pdf">
     <button type="submit">Încarcă</button>
-</form>
+  </form>
 
-  </div>
-    {% if valori_detectate %}
+  {% if valori_detectate %}
     <h4>Valori detectate automat:</h4>
     <ul>
-    {% for cheie, valoare in valori_detectate.items %}
+      {% for cheie, valoare in valori_detectate.items %}
         <li><strong>{{ cheie }}:</strong> {{ valoare }}</li>
-    {% endfor %}
+      {% endfor %}
     </ul>
-{% endif %}
+  {% endif %}
+</div>
+
 {% endblock %}

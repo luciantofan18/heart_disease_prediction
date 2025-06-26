@@ -1,9 +1,174 @@
-<h2>Login</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Login</button>
-</form>
-<a href="{% url 'register' %}">Register</a>
-<p><a href="{% url 'password_reset' %}">Forgot your password?</a></p>
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <title>Autentificare</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        .top-banner {
+    background-color: #a00000;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 12px 24px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    z-index: 10;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
 
+.header-logo {
+    height: 40px;
+    margin-right: 16px;
+}
+
+.header-title {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: white;
+            color: #a00000;
+        }
+
+        .login-wrapper {
+    display: flex;
+    height: calc(100vh - 60px); /* scădem înălțimea headerului */
+    margin-top: 60px; /* adăugăm spațiu cât headerul */
+}
+
+
+        .left-panel {
+            flex: 1;
+            background-color: #ffdbdb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+        }
+
+        .left-panel p {
+            max-width: 400px;
+            font-size: 18px;
+            line-height: 1.5;
+        }
+
+        .right-panel {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid #a00000;
+            padding: 32px;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 4px 12px rgba(160, 0, 0, 0.05);
+        }
+
+        .login-box h2 {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 4px;
+            margin-bottom: 16px;
+            font-family: inherit;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #a00000;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            background-color: #800000;
+        }
+
+        a {
+            color: #a00000;
+            text-decoration: none;
+            font-size: 14px;
+            margin-top: 12px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+ .centered-overlay-image {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 999; /* peste orice altceva */
+    max-width: 200px; /* ajustează după nevoie */
+    pointer-events: none; /* nu blochează clickurile de sub ea */
+}
+
+
+    </style>
+</head>
+<body>
+
+<header class="top-banner">
+    <img src="{% static 'images/logo.png' %}" class="centered-overlay-image">
+
+    <span class="header-title">Sistem autonom de detecție a bolilor cardiovasculare</span>
+</header>
+
+    <div class="login-wrapper">
+
+        <div class="left-panel">
+
+            <p><b>
+                 Bun venit! Platforma aceasta te ajută să gestionezi consultații și să detectezi din timp riscuri de boli cardiologice folosind alerte automate .</b><br><br>
+                Ghidul tău :<br>
+                1.Register/Log-in<br>
+                2.Introdu pacienți in baza noastră de date<br>
+                3.Adaugă parametrii și consultații pacienților<br>
+                După toate acestea, vei primi alerte despre riscul pacienților tăi de a dezvolta boli cardiace.
+            </p>
+        </div>
+
+        <div class="right-panel">
+            <div class="login-box">
+                <h2>Autentificare</h2>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit">Login</button>
+                </form>
+                <p><a href="{% url 'register' %}">Nu ai cont? Înregistrează-te</a></p>
+                <p><a href="{% url 'password_reset' %}">Ți-ai uitat parola?</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

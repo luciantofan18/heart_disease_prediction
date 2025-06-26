@@ -1,0 +1,174 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: white;
+    color: #a00000;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 32px;
+    border-bottom: 1px solid #a00000;
+}
+
+.navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.logo {
+    height: 40px;
+    width: auto;
+}
+
+.title {
+    font-size: 20px;
+    font-weight: 500;
+    color: #a00000;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropbtn {
+    background-color: transparent;
+    color: #a00000;
+    border: 1px solid #a00000;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: white;
+    min-width: 200px;
+    border: 1px solid #a00000;
+    box-shadow: 0px 4px 8px rgba(160, 0, 0, 0.1);
+    z-index: 1;
+}
+
+.dropdown-content a, .dropdown-content form {
+    display: block;
+    color: #a00000;
+    padding: 10px 16px;
+    text-decoration: none;
+    border-bottom: 1px solid #f4f4f4;
+}
+
+.dropdown-content a:hover,
+.dropdown-content form:hover {
+    background-color: #fdf2f2;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.logout-btn {
+    background: none;
+    border: none;
+    color: #a00000;
+    text-align: left;
+    width: 100%;
+    cursor: pointer;
+    padding: 0;
+    font-size: 14px;
+}
+
+.content {
+    padding: 32px;
+}
+
+.tooltip-icon {
+  display: inline-block;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 0 6px;
+  margin-left: 6px;
+  cursor: help;
+  font-size: 13px;
+  font-weight: bold;
+  text-align: center;
+}
+#countdown {
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background-color: #fff0f0;
+    border: 1px solid #a00000;
+    min-width: 60px;
+    text-align: center;
+}
+
+.btn {
+  background-color: #f3f3f3;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #333;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn:hover {
+  background-color: #e0e0e0;
+}
+
+.btn-delete {
+  background-color: #ffe5e5;
+  border-color: #ffcccc;
+  color: #cc0000;
+}
+
+.btn-delete:hover {
+  background-color: #ffcccc;
+  color: #a30000;
+}
+
+.section-title {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #a80000;
+    border-bottom: 2px solid #a80000;
+    padding-bottom: 5px;
+}
+
+.model-section {
+    margin-bottom: 30px;
+    font-size: 18px;
+    line-height: 1.6;
+}
+
+.model-section ul {
+    margin-left: 20px;
+    list-style-type: disc;
+}
+
+.comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.comparison-table th,
+.comparison-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.comparison-table th {
+    background-color: #f2f2f2;
+}

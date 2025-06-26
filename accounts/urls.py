@@ -7,6 +7,9 @@ from django.contrib.auth.views import LogoutView
 from django.urls import reverse_lazy
 from django.contrib.auth import views as auth_views
 from django.conf.urls.static import static
+from .views import countdown_view
+from .views import detalii_predictie
+
 urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('register/', views.register_view, name='register'),
@@ -24,6 +27,10 @@ urlpatterns = [
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
     path('pacient/<int:pacient_id>/upload-file/', views.upload_file, name='upload_file'),
     path('fisier/<int:fisier_id>/sterge/', views.sterge_fisier, name='sterge_fisier'),
+    path("countdown/", countdown_view, name="countdown"),
+    path('pacient/<int:pacient_id>/predictie/', detalii_predictie, name='detalii_predictie'),
+    path("istoric-model/", views.model_history, name="model_history"),
+    path('predictie_nn/<int:pacient_id>/', views.predictie_nn, name='predictie_nn'),
 
 ]
 

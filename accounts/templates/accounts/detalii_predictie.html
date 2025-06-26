@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalii Predicție AI{% endblock %}
+
+{% block content %}
+{% if predictie %}
+<h2>Detalii predicție AI pentru {{ pacient.nume }} {{ pacient.prenume }}</h2>
+
+<form method="post" action="{% url 'predictie_nn' pacient.id %}">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-secondary">Verifică predicția rulând și o rețea neuronală</button>
+</form>
+
+
+<div style="margin-top: 20px;">
+    <p><strong>Data ultimei rulări:</strong> {{ predictie.data|date:"d M Y, H:i" }}</p>
+
+    <p><strong>Rezultat:</strong>
+        {% if predictie.rezultat == 'risc' %}
+            <span style="color: red; font-weight: bold;">Pacient cu risc</span>
+        {% else %}
+            <span style="color: green; font-weight: bold;">Fără risc</span>
+        {% endif %}
+    </p>
+
+    <p><strong>Probabilitate risc:</strong> {{ predictie.probabilitate_risc|floatformat:2 }}%</p>
+    <p style="font-size: 14px; color: #555;">
+        <em>Acest procent reflectă încrederea modelului AI că pacientul prezintă un risc crescut de afecțiuni cardiovasculare.
+        Valori peste 60-65% sugerează un risc semnificativ.</em>
+    </p>
+
+    <p><strong>Probabilitate fără risc:</strong> {{ predictie.probabilitate_nu_risc|floatformat:2 }}%</p>
+    <p><strong>Procent voturi Random Forest:</strong> {{ predictie.procent_voturi|floatformat:2 }}%</p>
+    <p style="font-size: 14px; color: #555;">
+        <em>Acest procent indică proporția arborilor de decizie care au estimat prezența riscului. Modelul utilizează 100 arbori.</em>
+    </p>
+
+    <hr>
+
+    <h3>Parametrii utilizați la predicție:</h3>
+    <ul>
+        {% for key, val in predictie.caracteristici_folosite.items %}
+            <li><strong>{{ key }}:</strong> {{ val }}</li>
+        {% empty %}
+            <li><em>Date indisponibile.</em></li>
+        {% endfor %}
+    </ul>
+
+    <hr>
+
+    <h3>Importanța caracteristicilor în model:</h3>
+    <ul>
+        {% for key, val in predictie.importanta_caracteristici.items %}
+            <li><strong>{{ key }}:</strong> {{ val|floatformat:3 }}%</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <div style="margin-top: 20px;">
+        <p style="color: #666; font-style: italic;">Momentan nu există o predictie AI pentru acest pacient. Te rugăm să adaugi parametrii pentru a vedea detalii.</p>
+    </div>
+{% endif %}
+
+<a href="{% url 'vizualizeaza_pacienti' %}" class="button" style="margin-top: 30px;">Înapoi la pacienți</a>
+{% endblock %}

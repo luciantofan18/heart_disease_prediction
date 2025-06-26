@@ -9,6 +9,10 @@ class PacientForm(forms.ModelForm):
     class Meta:
         model = Pacient
         fields = ['nume', 'prenume', 'birth_date', 'sex', 'email']
+        labels = {
+            'birth_date': 'Data de naștere (YYYY-MM-DD)',
+        }
+
 
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)

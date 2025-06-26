@@ -1,35 +1,150 @@
-<form method="post" enctype="multipart/form-data" style="max-width: 400px; margin: auto;">
-  {% csrf_token %}
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <title>Înregistrare Medic</title>
+    {% load static %}
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: white;
+            color: #a00000;
+        }
 
-  <div style="margin-bottom: 15px;">
-    {{ form.username.label_tag }}<br>
-    {{ form.username }}
-  </div>
+        .register-container {
+            max-width: 380px;
+            margin: 80px auto;
+            padding: 28px;
+            background-color: #fff;
+            border: 2px solid #a00000;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(160, 0, 0, 0.1);
+        }
 
-  <div style="margin-bottom: 15px;">
-    {{ form.email.label_tag }}<br>
-    {{ form.email }}
-  </div>
+        .register-container h2 {
+            text-align: center;
+            margin-bottom: 24px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #a00000;
+        }
 
-  <div style="margin-bottom: 15px;">
-    {{ form.password1.label_tag }}<br>
-    {{ form.password1 }}
-  </div>
+        .form-group {
+            margin-bottom: 18px;
+        }
 
-  <div style="margin-bottom: 15px;">
-    {{ form.password2.label_tag }}<br>
-    {{ form.password2 }}
-  </div>
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
 
-  <div style="margin-bottom: 20px;">
-    <label for="{{ form.upload_document.id_for_label }}">
-      Încarcă dovada că ești medic:
-    </label><br>
-    {{ form.upload_document }}
-    <small style="color: gray;">
-        <br>Ex: diplomă sau certificat profesional<br>
-      Documentul incarcat nu va fi salvat pe server.</small>
-  </div>
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="file"] {
+            width: 100%;
+            padding: 8px;
+            font-family: inherit;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
 
-  <button type="submit" style="padding: 8px 16px;">Înregistrează-te</button>
-</form>
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #a00000;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #800000;
+        }
+
+        .info-text {
+            color: gray;
+            font-size: 13px;
+            display: block;
+            margin-top: 6px;
+        }
+
+        .back-to-login {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .back-to-login a {
+            color: #a00000;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-to-login a:hover {
+            text-decoration: underline;
+        }
+
+        .messages {
+            margin-bottom: 20px;
+            border-left: 4px solid #a00000;
+            background-color: #ffeded;
+            padding: 10px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h2>Înregistrare medic</h2>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="form-group">
+                {{ form.username.label_tag }}
+                {{ form.username }}
+            </div>
+
+            <div class="form-group">
+                {{ form.email.label_tag }}
+                {{ form.email }}
+            </div>
+
+            <div class="form-group">
+                {{ form.password1.label_tag }}
+                {{ form.password1 }}
+            </div>
+
+            <div class="form-group">
+                {{ form.password2.label_tag }}
+                {{ form.password2 }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.upload_document.id_for_label }}">
+                    Încarcă dovada că ești medic:
+                </label>
+                {{ form.upload_document }}
+                <small class="info-text">
+                   Atasamentul nu poate avea mai mult de 25 MB.<br>
+                    Documentul nu va fi salvat pe server, ci transmis prin e-mail.
+                </small>
+            </div>
+
+            <button type="submit">Înregistrează-te</button>
+
+            <p class="back-to-login">
+                Ai deja cont? <a href="{% url 'login' %}">Autentifică-te aici</a>
+            </p>
+        </form>
+    </div>
+</body>
+</html>

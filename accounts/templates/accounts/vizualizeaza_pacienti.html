@@ -8,10 +8,11 @@
   <div>
     <a href="{% url 'adauga_pacient' %}">Adaugă pacient</a>
   </div>
-    <form method="get" action="">
+
+  <form method="get" action="">
     <input type="text" name="q" placeholder="Caută după nume sau prenume..." value="{{ query|default:'' }}">
     <button type="submit">Caută</button>
-    </form>
+  </form>
 
   {% if Pacients %}
     <table border="1" cellpadding="5" cellspacing="0">
@@ -26,21 +27,29 @@
       </thead>
       <tbody>
         {% for pacient in Pacients %}
-          <tr>
+          <tr
+  {% if pacient.risc %}style="background-color: #f4aaaa;"
+  {% elif pacient.verified %}style="background-color: #83e883;"
+  {% endif %}
+>
             <td>{{ pacient.nume }}</td>
             <td>{{ pacient.prenume }}</td>
             <td>{{ pacient.age }}</td>
             <td>{{ pacient.email }}</td>
-            <td>
-              <a href="{% url 'consultatii_pacient' pacient.id %}">Vezi consultațiile</a>
-              <a href="{% url 'adauga_parametri' pacient.id %}">Adaugă parametri</a>
-              <a href="{% url 'upload_file' pacient.id %}">Fișierele pacientului</a>
+           <td>
+  <div class="actiuni-pacient" style="display: flex; gap: 8px; flex-wrap: wrap;">
+    <a href="{% url 'consultatii_pacient' pacient.id %}" class="btn">Consultații</a>
+    <a href="{% url 'adauga_parametri' pacient.id %}" class="btn">Parametri</a>
+    <a href="{% url 'upload_file' pacient.id %}" class="btn">Fișiere</a>
+    <a href="{% url 'detalii_predictie' pacient.id %}" class="btn">Ultima evaluare AI</a>
+    <form method="POST" action="{% url 'delete_patient' pacient.id %}" onsubmit="return confirm('Sigur vrei să ștergi acest pacient?');">
+      {% csrf_token %}
+          <button type="submit" class="btn btn-delete">Șterge</button>
 
-              <form method="POST" action="{% url 'delete_patient' pacient.id %}" style="display:inline;" onsubmit="return confirm('Sigur vrei să ștergi acest pacient?');">
-                {% csrf_token %}
-                <button type="submit">Șterge</button>
-              </form>
-            </td>
+    </form>
+  </div>
+</td>
+
           </tr>
         {% endfor %}
       </tbody>

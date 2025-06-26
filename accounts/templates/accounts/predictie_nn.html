@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2 style="margin-bottom: 20px;">Rezultatul rețelei neuronale</h2>
+
+  {% if eroare %}
+    <div style="color: red; font-size: 18px; font-weight: bold;">
+      {{ eroare }}
+    </div>
+  {% else %}
+    <div style="font-size: 20px; padding: 20px; border-radius: 8px;
+                background-color: {% if rezultat == 'Cu risc' %}#f8d7da{% else %}#d4edda{% endif %};
+                color: {% if rezultat == 'Cu risc' %}#721c24{% else %}#155724{% endif %};
+                border: 1px solid {% if rezultat == 'Cu risc' %}#f5c6cb{% else %}#c3e6cb{% endif %};">
+
+      <p><strong>Pacient:</strong> {{ pacient.nume }} {{ pacient.prenume }}</p>
+      <p><strong>Rezultat:</strong> {{ rezultat }}</p>
+
+      {% if scor %}
+        <p><strong>Probabilitate de risc estimată:</strong> {{ scor|floatformat:2 }}%</p>
+      {% endif %}
+    </div>
+<div style="margin-top: 40px; font-size: 17px; line-height: 1.6;">
+  <h4>Despre rețeaua neuronală</h4>
+  <p>
+    Rețeaua neuronală utilizată a fost antrenată pe același set de date ca și modelul Random Forest.
+    Ambele modele au oferit performanțe ridicate și apropiate, Complex Neural Network obținând o acuratețe de <strong>89.29%</strong>,
+    un recall de <strong>94.85%</strong> și un F1-Score de <strong>0.9109</strong>.
+  </p>
+  <p>
+    Random Forest a avut o acuratețe ușor mai mare, de <strong>89.98%</strong>, cu un F1-Score de <strong>0.9171</strong>,
+    fiind mai eficient în identificarea cazurilor pozitive. În schimb, rețeaua neuronală a reușit să clasifice mai corect unele cazuri negative,
+    evitând alarme false.
+  </p>
+  <p>
+    Această etapă de verificare a fost introdusă pentru a oferi o confirmare suplimentară din partea unui model alternativ de inteligență artificială.
+  </p>
+</div>
+{% endif %}
+
+
+  <div style="margin-top: 30px;">
+    <a href="{% url 'detalii_predictie' pacient.id %}" class="btn btn-primary">Înapoi la detalii</a>
+  </div>
+{% endblock %}

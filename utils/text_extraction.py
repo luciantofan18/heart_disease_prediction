@@ -1,5 +1,4 @@
-
-import fitz  # PyMuPDF
+import fitz
 
 def extract_text_bun(path_pdf):
     text = ""

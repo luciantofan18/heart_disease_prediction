@@ -32,7 +32,7 @@ def register_view(request):
         form = RegisterForm(request.POST, request.FILES)
         if form.is_valid():
             user = form.save(commit=False)
-            user.is_active = False  # contul trebuie aprobat de staff
+            user.is_active = False  # contul trebuie aprobat
             user.save()
             Doctor.objects.create(user=user)
 
@@ -68,7 +68,7 @@ def login_view(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect('dashboard')  # vom crea acest view mai târziu
+            return redirect('dashboard')
     else:
         form = AuthenticationForm()
     return render(request, 'accounts/login.html', {'form': form})
@@ -77,7 +77,19 @@ from django.contrib.auth.decorators import login_required
 
 @login_required
 def dashboard_view(request):
-    return render(request, 'accounts/dashboard.html')
+    pacienti = Pacient.objects.filter(doctor=request.user)
+
+    cu_risc = pacienti.filter(stare=2).count()
+    fara_risc = pacienti.filter(stare=1).count()
+    neverificati = pacienti.filter(stare=0).count()
+
+    context = {
+        'cu_risc': cu_risc,
+        'fara_risc': fara_risc,
+        'neverificate': neverificati,
+        'total': pacienti.count(),
+    }
+    return render(request, 'accounts/dashboard.html', context)
 @login_required
 def adauga_pacient(request):
     if request.method == 'POST':
@@ -93,7 +105,7 @@ def adauga_pacient(request):
 
 @login_required
 def pacienti_doctor(request):
-    pacienti = Pacient.objects.filter(doctor=request.user)  # Filtrează pacienții după doctor
+    pacienti = Pacient.objects.filter(doctor=request.user)
     return render(request, 'pacienti_doctor.html', {'pacienti': pacienti})
 
 def dashboard(request):
@@ -101,6 +113,7 @@ def dashboard(request):
     return render(request, 'dashboard.html', {'Pacients': pacienti})
 
 from django.db.models import Q
+from accounts.models import ParamConsult
 
 @login_required
 def vizualizeaza_pacienti(request):
@@ -112,10 +125,17 @@ def vizualizeaza_pacienti(request):
             Q(nume__icontains=query) | Q(prenume__icontains=query)
         )
 
+    # Adaugăm un atribut temporar fiecărui pacient: .risc
+    for pacient in pacienti:
+        consult = ParamConsult.objects.filter(pacient=pacient).order_by('-id').first()
+        pacient.risc = consult.Risk if consult else False
+        pacient.verified = consult.Verified if consult else False
+
     return render(request, 'accounts/vizualizeaza_pacienti.html', {
         'Pacients': pacienti,
         'query': query
     })
+
 
 @login_required
 def adauga_parametri(request, pacient_id):
@@ -141,6 +161,10 @@ def adauga_parametri(request, pacient_id):
                 messages.success(request, "Fișa medicală a fost procesată cu succes.")
                 raspuns_llm = consulta_mistral_formatat(extracted_data)
                 valori_detectate = parseaza_valori_llm(raspuns_llm)
+                print("VALORI DETECTATE DIN LLM:")
+                for k, v in valori_detectate.items():
+                    print(f"{k}: {v}")
+
             except Exception as e:
                 messages.error(request, f"Eroare la procesarea fișei: {str(e)}")
 
@@ -162,7 +186,7 @@ def adauga_parametri(request, pacient_id):
 
                 campuri = ['ChestPainType', 'RestingBP', 'Cholesterol', 'FastingBS',
                            'RestingECG', 'MaxHR', 'ExerciseAngina', 'Oldpeak', 'ST_slope']
-                campuri_lipsa = [field for field in campuri if not getattr(param, field)]
+                campuri_lipsa = [field for field in campuri if getattr(param, field) in [None, '']]
 
                 if campuri_lipsa and not ultimul:
                     messages.error(request, "Nu există consultații anterioare. Trebuie completate toate câmpurile.")
@@ -245,11 +269,73 @@ def sterge_fisier(request, fisier_id):
     fisier = get_object_or_404(PacientFile, id=fisier_id)
     pacient_id = fisier.pacient.id
 
-    # Ștergem fișierul din sistemul de fișiere
     fisier.uploaded_file.delete()
 
-    # Ștergem înregistrarea din baza de date
     fisier.delete()
 
     messages.success(request, "Fișierul a fost șters cu succes.")
     return redirect('upload_file', pacient_id=pacient_id)
+
+from django.http import JsonResponse
+from datetime import datetime, timedelta
+
+def countdown_view(request):
+    try:
+        with open("last_run.txt", "r") as f:
+            last_run = datetime.fromisoformat(f.read().strip())
+    except FileNotFoundError:
+        last_run = datetime.now()
+
+    return JsonResponse({
+        "last_run": last_run.isoformat()
+    })
+
+
+from .models import PredictieFinala
+
+def detalii_predictie(request, pacient_id):
+    pacient = get_object_or_404(Pacient, id=pacient_id)
+    predictie = PredictieFinala.objects.filter(pacient=pacient).order_by('-data').first()
+
+    context = {
+        'pacient': pacient,
+        'predictie': predictie,
+    }
+    return render(request, 'accounts/detalii_predictie.html', context)
+
+from django.shortcuts import render
+
+def model_history(request):
+    return render(request, 'accounts/model_rf_history.html')
+
+
+from django.shortcuts import render, get_object_or_404
+from accounts.models import Pacient, ParamConsult
+from utils.predictie_nn import predict_with_neural_net
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def predictie_nn(request, pacient_id):
+    pacient = get_object_or_404(Pacient, id=pacient_id)
+    consultatie = ParamConsult.objects.filter(pacient=pacient).order_by('-data').first()
+
+    if not consultatie:
+        return render(request, 'accounts/predictie_nn.html', {
+            'eroare': "Nu există consultații pentru acest pacient."
+        })
+
+    try:
+        rezultat_nn, scor = predict_with_neural_net(consultatie)
+
+        rezultat_text = "Cu risc" if rezultat_nn == 1 else "Fără risc"
+        scor_procente = scor * 100
+
+        return render(request, 'accounts/predictie_nn.html', {
+            'pacient': pacient,
+            'rezultat': rezultat_text,
+            'scor': scor_procente,
+        })
+    except Exception as e:
+        return render(request, 'accounts/predictie_nn.html', {
+            'eroare': f"Eroare la rularea rețelei neuronale: {str(e)}"
+        })
