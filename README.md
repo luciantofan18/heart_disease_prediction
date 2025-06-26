@@ -74,6 +74,7 @@ Model folosit pentru comparație în analiza offline, evaluat în faza de testar
 
 Rețea neuronală (MLP)
 Model de tip Multi-Layer Perceptron, rulat manual pentru a oferi o a doua opinie AI în cadrul platformei.
+
 ---
 
 Pentru interpretarea automată a analizelor medicale încărcate în format PDF, aplicația folosește modelul Mistral (rulat local prin Ollama). Acesta:
