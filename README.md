@@ -34,6 +34,11 @@ Proiectul urmărește crearea unui suport decizional inteligent pentru personalu
 - `templates/` – pagini HTML
 - `static/` – fișiere CSS
 - `scheduler.py` – thread care rulează predicțiile la fiecare 2 minute
+## 📓 Notebook disponibil
+
+- [`Copy_of_Preprocesare_date_selectare_model(2).ipynb`](notebook/Copy_of_Preprocesare_date_selectare_model(2).ipynb):  
+  Acest notebook conține întregul pipeline AI/ML: preprocesarea datelor, selecția trăsăturilor, antrenarea și compararea modelelor Random Forest, Support Vector Classifier și rețele neuronale.  
+  Este util pentru reproducerea experimentelor și înțelegerea logicii din spatele modelului integrat în aplicația web.
 
 ---
 
